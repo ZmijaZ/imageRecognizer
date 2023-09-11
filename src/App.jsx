@@ -6,6 +6,8 @@ function App() {
   const [model, setModel] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
 
+  const [result, setResult] = useState([]);
+
   const imageRef = useRef();
 
   const loadModel = async () => {
@@ -32,7 +34,7 @@ function App() {
 
   const identifyImage = async () => {
     const results = await model.classify(imageRef.current);
-    console.log(results);
+    setResult(results);
   };
 
   useEffect(() => {
@@ -76,6 +78,21 @@ function App() {
           </button>
         )}
       </div>
+      {result.length > 0 && (
+        <div>
+          {result.map((result, index) => {
+            return (
+              <div key={result.className}>
+                <span>{result.className}</span>
+                <span>
+                  Confidence level: {(result.probability * 100).toFixed(2)}%
+                  {index === 0 && <span>Best guess</span>}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }
