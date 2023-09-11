@@ -9,6 +9,7 @@ function App() {
   const [result, setResult] = useState([]);
 
   const imageRef = useRef();
+  const textImageRef = useRef();
 
   const loadModel = async () => {
     setIsModelLoading(true);
@@ -33,8 +34,14 @@ function App() {
   };
 
   const identifyImage = async () => {
+    textImageRef.current.value = "";
     const results = await model.classify(imageRef.current);
     setResult(results);
+  };
+
+  const onChange = (e) => {
+    setImageUrl(e.target.value);
+    setResult([]);
   };
 
   useEffect(() => {
@@ -57,6 +64,13 @@ function App() {
           capture="camera"
           onChange={uploadImage}
           className="uploadInput"
+        />
+        <span>OR</span>
+        <input
+          type="text"
+          placeholder="Image url"
+          ref={textImageRef}
+          onChange={onChange}
         />
       </div>
       <div className="mainWrapper">
