@@ -7,6 +7,7 @@ function App() {
   const [imageUrl, setImageUrl] = useState("");
 
   const [result, setResult] = useState([]);
+  const [history, setHistory] = useState([]);
 
   const imageRef = useRef();
   const textImageRef = useRef();
@@ -47,6 +48,12 @@ function App() {
   useEffect(() => {
     loadModel();
   }, []);
+
+  useEffect(() => {
+    if (imageUrl) {
+      setHistory([imageUrl, ...history]);
+    }
+  }, [imageUrl]);
 
   if (isModelLoading) {
     return <h2>Model loading</h2>;
@@ -107,6 +114,26 @@ function App() {
           })}
         </div>
       )}
+      <div className="recentPredictions">
+        <h2>Recent images</h2>
+        <div className="Recent images">
+          {history.length > 0 &&
+            history.map((image, index) => {
+              return (
+                <div key={`${image}${index}`}>
+                  <img
+                    width="200px"
+                    src={image}
+                    alt="Recent prediction"
+                    onClick={() => {
+                      setImageUrl(image);
+                    }}
+                  ></img>
+                </div>
+              );
+            })}
+        </div>
+      </div>
     </>
   );
 }
